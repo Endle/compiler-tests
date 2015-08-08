@@ -11,4 +11,10 @@
 #define finally                         __finally
 #define leave                           __leave
 
+#elif defined(__MINGW32__) || defined(__MINGW64__)
+#define try
+#define except
+#define finally
+#define leave
+
 #endif
