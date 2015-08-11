@@ -23,6 +23,11 @@ do
     name=`basename $file .c`
     echo $name".exe :" $file >>$TARGET
     if [ USE_CL ]; then
+        if [ $file == seh_noreturn.c ]; then
+            echo "Hack for seh_noreturn.c"
+            echo "	" cp seh0001.exe  $name".exe">>$TARGET
+            continue
+        fi
         echo "	" $COMPILER  $file>>$TARGET
     else
         echo "	" $COMPILER  $file "-o" $name".exe">>$TARGET
@@ -36,3 +41,20 @@ do
     name=`basename $file .c`
     echo "	"$name".exe\\">>$TARGET
 done
+
+echo >>$TARGET
+for file in `ls *.c`
+do
+    name=`basename $file .c`
+    echo $name".ok : " $name".exe">>$TARGET
+    echo "	"\$\(WINE\) $name".exe && touch "$name".ok">>$TARGET
+done
+
+echo >>$TARGET
+echo "test:\\">>$TARGET
+for file in `ls *.c`
+do
+    name=`basename $file .c`
+    echo "	"$name".ok\\">>$TARGET
+done
+echo >>$TARGET
