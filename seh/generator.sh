@@ -1,4 +1,6 @@
-COMPILER=i686-w64-mingw32-gcc
+# See http://www.kegel.com/wine/cl-howto-win7sdk.html
+COMPILER=cl.sh
+USE_CL=1
 TARGET=Makefile
 
 echo "COMPILER="$COMPILER > $TARGET
@@ -20,7 +22,11 @@ for file in `ls *.c`
 do
     name=`basename $file .c`
     echo $name".exe :" $file >>$TARGET
-    echo "	" $COMPILER  $file "-o" $name".exe">>$TARGET
+    if [ USE_CL ]; then
+        echo "	" $COMPILER  $file>>$TARGET
+    else
+        echo "	" $COMPILER  $file "-o" $name".exe">>$TARGET
+    fi
 done
 
 echo >>$TARGET
